@@ -1,11 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start Backend" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/townService/package.json" />
-    <command value="run" />
-    <scripts>
-      <script value="start" />
-    </scripts>
-    <node-interpreter value="project" />
+    <command value="start" />
+    <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.0.0/bin/node" />
     <envs />
     <method v="2" />
   </configuration>
