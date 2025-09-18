@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start Frontend (Live)" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/frontend/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="start" />
+    </scripts>
+    <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.0.0/bin/node" />
+    <envs>
+      <env name="NEXT_PUBLIC_TOWN_DEV_MODE" value="false" />
+    </envs>
+    <method v="2">
+      <option name="LaunchBrowser.Before.Run" url="http://localhost:3000" />
+    </method>
+  </configuration>
+</component>
