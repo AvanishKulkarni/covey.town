@@ -83,12 +83,49 @@ describe('QuantumTicTacToeGame', () => {
       beforeEach(() => {
         game.join(player1);
         game.join(player2);
+        expect(game.state.x).toBe(player1.id);
+        expect(game.state.o).toBe(player2.id);
       });
 
-      it('should set the game to OVER and declare the other player the winner', () => {
+      it('should set the game to OVER and declare O the winner', () => {
         game.leave(player1);
+
         expect(game.state.status).toBe('OVER');
         expect(game.state.winner).toBe(player2.id);
+        expect(game.state.moves).toHaveLength(0);
+
+        expect(game.state.x).toBe(player1.id);
+        expect(game.state.o).toBe(player2.id);
+      });
+
+      it('should set the game to OVER and declare X the winner', () => {
+        game.leave(player2);
+
+        expect(game.state.status).toBe('OVER');
+        expect(game.state.winner).toBe(player1.id);
+        expect(game.state.moves).toHaveLength(0);
+
+        expect(game.state.x).toBe(player1.id);
+        expect(game.state.o).toBe(player2.id);
+      });
+    });
+    describe('when one player is in the game', () => {
+      beforeEach(() => {
+        game.join(player1);
+        expect(game.state.x).toBe(player1.id);
+        expect(game.state.o).toBeUndefined();
+        expect(game.state.moves).toHaveLength(0);
+        expect(game.state.winner).toBeUndefined();
+        expect(game.state.status).toBe('WAITING_TO_START');
+      });
+
+      it('should set the game to WAITING_TO_START', () => {
+        expect(game.state.x).toBe(player1.id);
+        expect(game.state.o).toBeUndefined();
+        game.leave(player1);
+        expect(game.state.status).toBe('WAITING_TO_START');
+        expect(game.state.winner).toBeUndefined();
+        expect(game.state.moves).toHaveLength(0);
       });
     });
   });

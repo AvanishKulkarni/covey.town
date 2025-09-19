@@ -9,6 +9,7 @@ import Player from '../../lib/Player';
 import InvalidParametersError, {
   GAME_FULL_MESSAGE,
   PLAYER_ALREADY_IN_GAME_MESSAGE,
+  PLAYER_NOT_IN_GAME_MESSAGE,
 } from '../../lib/InvalidParametersError';
 
 /**
@@ -86,7 +87,33 @@ export default class QuantumTicTacToeGame extends Game<
   }
 
   protected _leave(player: Player): void {
-    // TODO: implement me
+    if (this.state.x !== player.id && this.state.o !== player.id) {
+      throw new InvalidParametersError(PLAYER_NOT_IN_GAME_MESSAGE);
+    }
+    // Handles case where the game has not started yet
+    if (this.state.o === undefined) {
+      this.state = {
+        oScore: 0,
+        publiclyVisible: { A: [], B: [], C: [] },
+        xScore: 0,
+        moves: [],
+        status: 'WAITING_TO_START',
+      };
+      return;
+    }
+    if (this.state.x === player.id) {
+      this.state = {
+        ...this.state,
+        status: 'OVER',
+        winner: this.state.o,
+      };
+    } else {
+      this.state = {
+        ...this.state,
+        status: 'OVER',
+        winner: this.state.x,
+      };
+    }
   }
 
   /**
