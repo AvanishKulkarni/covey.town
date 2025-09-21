@@ -150,6 +150,17 @@ export default class TicTacToeGame extends Game<TicTacToeGameState, TicTacToeMov
     this._applyMove(cleanMove);
   }
 
+  // TODO document
+  public cellOccupied(row: number, col: number): boolean {
+    for (const m of this.state.moves) {
+      if (m.col === col && m.row === row) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Adds a player to the game.
    * Updates the game's state to reflect the new player.
