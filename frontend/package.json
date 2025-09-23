@@ -32,6 +32,7 @@
     "enzyme": "^3.11.0",
     "framer-motion": "^6.5.0",
     "fscreen": "^1.2.0",
+    "jest-util": "^30.0.5",
     "linkify-it": "^4.0.1",
     "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
