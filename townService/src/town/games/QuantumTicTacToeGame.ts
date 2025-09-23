@@ -7,7 +7,6 @@ import Game from './Game';
 import TicTacToeGame from './TicTacToeGame';
 import Player from '../../lib/Player';
 import InvalidParametersError, {
-  BOARD_POSITION_NOT_VALID_MESSAGE,
   GAME_FULL_MESSAGE,
   GAME_NOT_IN_PROGRESS_MESSAGE,
   INVALID_MOVE_MESSAGE,
@@ -25,9 +24,9 @@ export default class QuantumTicTacToeGame extends Game<
   QuantumTicTacToeGameState,
   QuantumTicTacToeMove
 > {
-  private _games: { A: TicTacToeGame; B: TicTacToeGame; C: TicTacToeGame };
+  private readonly _games: { A: TicTacToeGame; B: TicTacToeGame; C: TicTacToeGame };
 
-  private _wonGame: { A: boolean; B: boolean; C: boolean };
+  private readonly _wonGame: { A: boolean; B: boolean; C: boolean };
 
   private _xScore: number;
 
@@ -160,7 +159,7 @@ export default class QuantumTicTacToeGame extends Game<
     // check if the cell has already been won on the public board
     const { board, row, col } = move.move;
     if (this.state.publiclyVisible[board][row][col]) {
-      throw new InvalidParametersError(BOARD_POSITION_NOT_VALID_MESSAGE);
+      throw new InvalidParametersError(INVALID_MOVE_MESSAGE);
     }
 
     // check if the board has already been won
@@ -174,6 +173,27 @@ export default class QuantumTicTacToeGame extends Game<
     }
   }
 
+  /**
+   * Applies a player's move to the game.
+   * Validates the move before applying it. Throws InvalidParametersError if:
+   *  - The game is not in progress (GAME_NOT_IN_PROGRESS)
+   *  - The move is not on the player's turn (MOVE_NOT_YOUR_TURN_MESSAGE)
+   *  - The move is on a publicly visible filled square (INVALID_MOVE_MESSAGE)
+   *  - The move is on a hidden filled square visible to the current player (INVALID_MOVE_MESSAGE)
+   *  - The board has already been won (INVALID_MOVE_MESSAGE)
+   *
+   * If the move is valid, applies the move to the specified board and updates game state.
+   * Turn validation for the underlying Tic-Tac-Toe instances is skipped.
+   *
+   * If the move wins a board, the board is disabled and game score updated.
+   * If the move results in a win, updates the game's state to 'OVER' and sets the winner.
+   * If the move results in a tie, updates the game's state to 'OVER' and sets the winner to undefined.
+   *
+   * @param move The move to apply to the game
+   * @throws INVALID_MOVE_MESSAGE if the move is invalid
+   * @throws GAME_NOT_IN_PROGRESS_MESSAGE if the game is not in progress
+   * @throws MOVE_NOT_YOUR_TURN_MESSAGE if it is not the player's turn
+   */
   public applyMove(move: GameMove<QuantumTicTacToeMove>): void {
     this._validateMove(move);
 
@@ -225,14 +245,13 @@ export default class QuantumTicTacToeGame extends Game<
 
       if (!this._wonGame[board]) {
         // check if a winner is set on this board
-        if (game.state.winner != null) {
+        if (game.state.status === 'OVER') {
           if (game.state.winner === this.state.x) {
             this._xScore++;
           } else if (game.state.winner === this.state.o) {
             this._oScore++;
           }
 
-          game.state.status = 'OVER';
           this._wonGame[board] = true;
         }
       }
