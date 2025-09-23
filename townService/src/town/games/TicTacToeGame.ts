@@ -153,7 +153,11 @@ export default class TicTacToeGame extends Game<TicTacToeGameState, TicTacToeMov
     this._applyMove(cleanMove);
   }
 
-  // TODO document
+  /**
+   * Returns the string value of the cell in the board.
+   * @param row Row index: 0 | 1 | 2
+   * @param col Column index: 0 | 1 | 2
+   */
   public getCell(row: number, col: number) {
     return this._board[row][col];
   }
