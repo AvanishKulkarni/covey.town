@@ -124,8 +124,55 @@ export default class QuantumTicTacToeAreaController extends GameAreaController<
   }
 
   protected _updateFrom(newModel: GameArea<QuantumTicTacToeGameState>): void {
+    const ourId = this._townController.ourPlayer.id;
+    const wasOurTurn = this.whoseTurn?.id === ourId;
     super._updateFrom(newModel);
     // TODO: implement the rest of this
+    const newState = newModel.game;
+
+    if (newState) {
+      const updatedBoards: Record<'A' | 'B' | 'C', TicTacToeCell[][]> = {
+        A: [
+          [undefined, undefined, undefined],
+          [undefined, undefined, undefined],
+          [undefined, undefined, undefined],
+        ],
+        B: [
+          [undefined, undefined, undefined],
+          [undefined, undefined, undefined],
+          [undefined, undefined, undefined],
+        ],
+        C: [
+          [undefined, undefined, undefined],
+          [undefined, undefined, undefined],
+          [undefined, undefined, undefined],
+        ],
+      };
+
+      const publiclyVisible = newState.state.publiclyVisible;
+
+      newState.state.moves.forEach(move => {
+        const cell = updatedBoards[move.board][move.row][move.col];
+        const cellSet = cell !== undefined;
+        const visibleToAll = publiclyVisible[move.board][move.row][move.col];
+        const visibleToPlayer = move.gamePiece === this.gamePiece;
+
+        if ((!cellSet) && (visibleToAll || visibleToPlayer)) {
+          updatedBoards[move.board][move.row][move.col] = move.gamePiece;
+        }});
+
+      (['A', 'B', 'C'] as const).forEach(boardKey => {
+        if (!_.isEqual(updatedBoards[boardKey], this._boards[boardKey])) {
+          this._boards[boardKey] = updatedBoards[boardKey];
+          this.emit('boardChanged', this._boards);
+        }
+      });
+    }
+
+    const isOurTurn = this.whoseTurn?.id === this._townController.ourPlayer.id;
+    if (wasOurTurn !== isOurTurn) {
+      this.emit('turnChanged', isOurTurn);
+    }
   }
 
   public async makeMove(

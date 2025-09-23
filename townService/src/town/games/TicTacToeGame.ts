@@ -85,7 +85,7 @@ export default class TicTacToeGame extends Game<TicTacToeGameState, TicTacToeMov
     }
   }
 
-  private _validateMove(move: TicTacToeMove) {
+  private _validateMove(move: TicTacToeMove, checkTurn = true) {
     // A move is valid if the space is empty
     for (const m of this.state.moves) {
       if (m.col === move.col && m.row === move.row) {
@@ -94,11 +94,14 @@ export default class TicTacToeGame extends Game<TicTacToeGameState, TicTacToeMov
     }
 
     // A move is only valid if it is the player's turn
-    if (move.gamePiece === 'X' && this.state.moves.length % 2 === 1) {
-      throw new InvalidParametersError(MOVE_NOT_YOUR_TURN_MESSAGE);
-    } else if (move.gamePiece === 'O' && this.state.moves.length % 2 === 0) {
-      throw new InvalidParametersError(MOVE_NOT_YOUR_TURN_MESSAGE);
+    if (checkTurn) {
+      if (move.gamePiece === 'X' && this.state.moves.length % 2 === 1) {
+        throw new InvalidParametersError(MOVE_NOT_YOUR_TURN_MESSAGE);
+      } else if (move.gamePiece === 'O' && this.state.moves.length % 2 === 0) {
+        throw new InvalidParametersError(MOVE_NOT_YOUR_TURN_MESSAGE);
+      }
     }
+
     // A move is valid only if game is in progress
     if (this.state.status !== 'IN_PROGRESS') {
       throw new InvalidParametersError(GAME_NOT_IN_PROGRESS_MESSAGE);
@@ -134,7 +137,7 @@ export default class TicTacToeGame extends Game<TicTacToeGameState, TicTacToeMov
    * @param move The move to apply to the game
    * @throws InvalidParametersError if the move is invalid
    */
-  public applyMove(move: GameMove<TicTacToeMove>): void {
+  public applyMove(move: GameMove<TicTacToeMove>, checkTurn = true): void {
     let gamePiece: 'X' | 'O';
     if (move.playerID === this.state.x) {
       gamePiece = 'X';
@@ -146,19 +149,13 @@ export default class TicTacToeGame extends Game<TicTacToeGameState, TicTacToeMov
       col: move.move.col,
       row: move.move.row,
     };
-    this._validateMove(cleanMove);
+    this._validateMove(cleanMove, checkTurn);
     this._applyMove(cleanMove);
   }
 
   // TODO document
-  public cellOccupied(row: number, col: number): boolean {
-    for (const m of this.state.moves) {
-      if (m.col === col && m.row === row) {
-        return true;
-      }
-    }
-
-    return false;
+  public getCell(row: number, col: number) {
+    return this._board[row][col];
   }
 
   /**
