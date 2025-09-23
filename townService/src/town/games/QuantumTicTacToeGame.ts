@@ -7,7 +7,6 @@ import Game from './Game';
 import TicTacToeGame from './TicTacToeGame';
 import Player from '../../lib/Player';
 import InvalidParametersError, {
-  BOARD_POSITION_NOT_EMPTY_MESSAGE,
   BOARD_POSITION_NOT_VALID_MESSAGE,
   GAME_FULL_MESSAGE,
   GAME_NOT_IN_PROGRESS_MESSAGE,

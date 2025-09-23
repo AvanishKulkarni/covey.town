@@ -157,9 +157,10 @@ export default class QuantumTicTacToeAreaController extends GameAreaController<
         const visibleToAll = publiclyVisible[move.board][move.row][move.col];
         const visibleToPlayer = move.gamePiece === this.gamePiece;
 
-        if ((!cellSet) && (visibleToAll || visibleToPlayer)) {
+        if (!cellSet && (visibleToAll || visibleToPlayer)) {
           updatedBoards[move.board][move.row][move.col] = move.gamePiece;
-        }});
+        }
+      });
 
       (['A', 'B', 'C'] as const).forEach(boardKey => {
         if (!_.isEqual(updatedBoards[boardKey], this._boards[boardKey])) {
